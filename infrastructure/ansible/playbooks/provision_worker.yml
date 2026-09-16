@@ -1,0 +1,13 @@
+- name: Bootstrap an ephemeral cloud Slurm worker
+  hosts: cloud_workers
+  become: true
+  roles:
+    - common
+    - identity
+    - storage_client
+    - compute
+  tasks:
+    - name: Configure GPU support when requested
+      ansible.builtin.include_role:
+        name: gpu
+      when: gpu_enabled | bool
