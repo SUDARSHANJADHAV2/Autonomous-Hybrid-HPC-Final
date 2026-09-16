@@ -1,0 +1,6 @@
+- hosts: cloud_workers
+  become: true
+  tasks:
+    - name: Drain worker before termination
+      ansible.builtin.command: "scontrol update NodeName={{ inventory_hostname }} State=DRAIN Reason=decommission"
+      changed_when: true
