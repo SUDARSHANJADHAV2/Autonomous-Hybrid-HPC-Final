@@ -1,0 +1,36 @@
+- name: Configure common foundation
+  hosts: all
+  become: true
+  roles:
+    - common
+    - monitoring
+
+- name: Configure identity and storage services
+  hosts: controllers
+  become: true
+  roles:
+    - identity
+    - storage
+    - master
+    - portal
+
+- name: Configure LDAP clients and shared storage mounts
+  hosts: compute:login:gpu:cloud_workers
+  become: true
+  roles:
+    - identity
+    - storage_client
+
+- name: Configure local and GPU compute
+  hosts: compute:gpu
+  become: true
+  roles:
+    - compute
+
+- name: Configure GPU compute
+  hosts: gpu
+  become: true
+  vars:
+    gpu_enabled: true
+  roles:
+    - gpu
