@@ -1,0 +1,24 @@
+hpc_domain: hpc.local
+slurm_user: slurm
+slurm_group: slurm
+slurm_controller: hpc-controller
+munge_key_path: /etc/munge/munge.key
+nfs_export_path: /shared
+nfs_server: hpc-controller
+nfs_client_cidr: 10.40.0.0/16
+storage_lvm_enabled: false
+storage_lvm_device: /dev/sdb
+storage_lvm_vg: hpcvg
+storage_lvm_lv: shared
+storage_lvm_fstype: ext4
+ldap_uri: ldap://hpc-controller
+ldap_base_dn: dc=hpc,dc=local
+slurm_partition_local: local
+slurm_partition_cloud: cloud
+slurm_partition_hybrid: hybrid
+node_exporter_package: prometheus-node-exporter
+gpu_enabled: false
+slurm_db_user: slurm
+slurm_db_name: slurm_acct_db
+# Supply this through Ansible Vault; never commit a production password.
+slurm_db_password: "CHANGE_ME_USE_ANSIBLE_VAULT"
