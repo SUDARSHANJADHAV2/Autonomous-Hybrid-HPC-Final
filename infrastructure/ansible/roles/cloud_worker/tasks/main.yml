@@ -1,0 +1,4 @@
+- name: Create cloud-worker marker
+  ansible.builtin.copy: {dest: /etc/hpc-cloud-worker, content: 'managed-by=autonomous-hybrid-hpc\n', mode: '0644'}
+- name: Create Slurm spool directory
+  ansible.builtin.file: {path: /var/spool/slurmd, state: directory, owner: slurm, group: slurm, mode: '0755'}
