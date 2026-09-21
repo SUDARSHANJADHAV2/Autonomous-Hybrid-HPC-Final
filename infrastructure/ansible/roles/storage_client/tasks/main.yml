@@ -1,0 +1,19 @@
+- name: Install NFS client package
+  ansible.builtin.package:
+    name: nfs-common
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Create shared storage mount point
+  ansible.builtin.file:
+    path: "{{ nfs_export_path }}"
+    state: directory
+    mode: '0775'
+
+- name: Mount shared storage from controller
+  ansible.posix.mount:
+    path: "{{ nfs_export_path }}"
+    src: "{{ nfs_server }}:{{ nfs_export_path }}"
+    fstype: nfs
+    opts: "defaults,_netdev"
+    state: mounted
