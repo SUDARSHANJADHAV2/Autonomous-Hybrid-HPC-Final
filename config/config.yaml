@@ -1,0 +1,34 @@
+mode: demo
+automation_mode: SAFE
+database:
+  path: data/hpc.db
+orchestrator:
+  poll_interval_seconds: 10
+  max_concurrent_actions: 2
+  action_timeout_seconds: 120
+cloud:
+  provider: aws
+  region: us-east-1
+  worker:
+    ami_id: ami-CHANGE-ME
+    instance_type_cpu: t3.large
+    instance_type_gpu: g4dn.xlarge
+    subnet_id: subnet-CHANGE-ME
+    security_group_id: sg-CHANGE-ME
+    ssh_key_name: CHANGE-ME
+    max_nodes: 8
+    idle_termination_minutes: 20
+  networking:
+    provider: tailscale
+slurm:
+  controller: hpc-controller
+  partitions:
+    - {name: local, default: true, nodes: [compute01, compute02, compute03, compute04]}
+    - {name: cloud, default: false, nodes: [cloud01, cloud02]}
+    - {name: hybrid, default: false, nodes: [compute01, compute02, compute03, compute04, cloud01, cloud02]}
+monitoring:
+  prometheus_url: http://localhost:9090
+  scrape_timeout_seconds: 5
+ai:
+  enabled: false
+  provider: gemini
