@@ -1,0 +1,13 @@
+- name: Install NVIDIA container toolkit
+  ansible.builtin.package:
+    name: nvidia-container-toolkit
+    state: present
+
+- name: Install GPU GRES configuration
+  ansible.builtin.template:
+    src: gres.conf.j2
+    dest: /etc/slurm/gres.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart slurmd
