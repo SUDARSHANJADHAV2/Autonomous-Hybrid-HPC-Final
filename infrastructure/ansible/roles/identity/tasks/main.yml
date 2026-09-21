@@ -1,0 +1,40 @@
+- name: Install LDAP client packages on Debian-family systems
+  ansible.builtin.package:
+    name:
+      - ldap-utils
+      - libnss-ldap
+      - libpam-ldap
+      - nscd
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Configure LDAP client endpoint
+  ansible.builtin.copy:
+    dest: /etc/ldap.conf
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      uri {{ ldap_uri }}
+      base {{ ldap_base_dn }}
+      nss_initgroups_ignoreusers ALLLOCAL
+
+- name: Enable LDAP passwd lookup
+  ansible.builtin.lineinfile:
+    path: /etc/nsswitch.conf
+    regexp: '^passwd:'
+    line: 'passwd:         compat ldap'
+    backup: true
+
+- name: Enable LDAP group lookup
+  ansible.builtin.lineinfile:
+    path: /etc/nsswitch.conf
+    regexp: '^group:'
+    line: 'group:          compat ldap'
+    backup: true
+
+- name: Record LDAP endpoint for operations
+  ansible.builtin.copy:
+    dest: /etc/hpc-ldap-endpoint
+    content: "{{ ldap_uri }}\n"
+    mode: '0644'
