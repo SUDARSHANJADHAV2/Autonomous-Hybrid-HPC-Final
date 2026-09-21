@@ -1,0 +1,12 @@
+AuthType=auth/munge
+DbdHost={{ slurm_controller }}
+DbdPort=6819
+SlurmUser={{ slurm_user }}
+StorageType=accounting_storage/mysql
+StorageHost=127.0.0.1
+StoragePort=3306
+StorageUser={{ slurm_db_user }}
+StoragePass={{ slurm_db_password }}
+StorageLoc={{ slurm_db_name }}
+PidFile=/run/slurmdbd.pid
+LogFile=/var/log/slurm/slurmdbd.log
