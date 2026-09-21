@@ -1,0 +1,10 @@
+- name: Install node exporter package where available
+  ansible.builtin.package:
+    name: "{{ node_exporter_package }}"
+    state: present
+
+- name: Enable node exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    enabled: true
+    state: started
