@@ -1,0 +1,24 @@
+ClusterName=hpc-hybrid
+SlurmctldHost={{ slurm_controller }}
+AuthType=auth/munge
+ProctrackType=proctrack/cgroup
+TaskPlugin=task/cgroup
+SelectType=select/cons_tres
+SelectTypeParameters=CR_Core_Memory
+GresTypes=gpu
+SlurmctldPidFile=/run/slurmctld.pid
+SlurmdPidFile=/run/slurmd.pid
+StateSaveLocation=/var/lib/slurm/slurmctld
+SlurmdSpoolDir=/var/spool/slurmd
+SlurmctldPort=6817
+SlurmdPort=6818
+SlurmUser={{ slurm_user }}
+AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageHost={{ slurm_controller }}
+SchedulerType=sched/backfill
+NodeName=compute[01-04] CPUs=1 State=UNKNOWN
+NodeName=compute-gpu01 CPUs=1 Gres=gpu:1 State=UNKNOWN
+NodeName=cloud[01-08] CPUs=1 State=UNKNOWN
+PartitionName={{ slurm_partition_local }} Nodes=compute[01-04],compute-gpu01 Default=YES State=UP
+PartitionName={{ slurm_partition_cloud }} Nodes=cloud[01-08] Default=NO State=UP
+PartitionName={{ slurm_partition_hybrid }} Nodes=compute[01-04],compute-gpu01,cloud[01-08] Default=NO State=UP
