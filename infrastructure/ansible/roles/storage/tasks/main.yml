@@ -1,0 +1,47 @@
+- name: Install NFS server and client packages
+  ansible.builtin.package:
+    name:
+      - nfs-kernel-server
+      - nfs-common
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Create shared path on controller
+  ansible.builtin.file:
+    path: "{{ nfs_export_path }}"
+    state: directory
+    mode: '0775'
+
+- name: Export shared filesystem from controller
+  ansible.builtin.lineinfile:
+    path: /etc/exports
+    line: "{{ nfs_export_path }} {{ nfs_client_cidr }}(rw,sync,no_subtree_check)"
+    create: true
+  notify: reload nfs
+
+- name: Create optional LVM volume for shared storage
+  community.general.lvg:
+    vg: "{{ storage_lvm_vg }}"
+    pvs: "{{ storage_lvm_device }}"
+  when: storage_lvm_enabled | bool
+
+- name: Create optional logical volume
+  community.general.lvol:
+    vg: "{{ storage_lvm_vg }}"
+    lv: "{{ storage_lvm_lv }}"
+    size: 100%FREE
+  when: storage_lvm_enabled | bool
+
+- name: Create optional shared filesystem
+  community.general.filesystem:
+    fstype: "{{ storage_lvm_fstype }}"
+    dev: "/dev/{{ storage_lvm_vg }}/{{ storage_lvm_lv }}"
+  when: storage_lvm_enabled | bool
+
+- name: Mount optional LVM filesystem before exporting it
+  ansible.posix.mount:
+    path: "{{ nfs_export_path }}"
+    src: "/dev/{{ storage_lvm_vg }}/{{ storage_lvm_lv }}"
+    fstype: "{{ storage_lvm_fstype }}"
+    state: mounted
+  when: storage_lvm_enabled | bool
