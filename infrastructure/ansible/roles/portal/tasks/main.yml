@@ -1,0 +1,15 @@
+- name: Install Open OnDemand prerequisite packages where available
+  ansible.builtin.package:
+    name:
+      - httpd
+      - git
+      - gcc
+      - make
+    state: present
+  failed_when: false
+
+- name: Document Open OnDemand installation boundary
+  ansible.builtin.copy:
+    dest: /etc/hpc-portal-profile
+    mode: '0644'
+    content: "Open OnDemand deployment is site/package-repository specific; keep portal on the login tier.\n"
