@@ -1,0 +1,7 @@
+groups:
+- name: hpc-gpu
+  rules:
+  - alert: HPPGPUExporterMissing
+    expr: up{job="dcgm"} == 0
+    for: 2m
+    labels: {severity: warning}
