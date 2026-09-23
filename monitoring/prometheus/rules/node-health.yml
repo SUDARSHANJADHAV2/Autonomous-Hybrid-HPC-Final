@@ -1,0 +1,12 @@
+groups:
+- name: hpc-node-health
+  rules:
+  - alert: HPCNodeExporterMissing
+    expr: up{job="node"} == 0
+    for: 2m
+    labels: {severity: warning}
+    annotations: {summary: "HPC node exporter missing"}
+  - alert: HPCHighLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+    for: 10m
+    labels: {severity: warning}
