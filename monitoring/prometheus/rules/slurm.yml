@@ -1,0 +1,7 @@
+groups:
+- name: hpc-slurm
+  rules:
+  - alert: HPCSlurmExporterMissing
+    expr: up{job="slurm"} == 0
+    for: 2m
+    labels: {severity: warning}
